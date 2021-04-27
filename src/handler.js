@@ -2,41 +2,52 @@ const nanoid = require('nanoid');
 const notes = require('./notes');
 
 const addNoteHandler = (request, h) => {
-  const { title, body, tags } = request.payload;
-  const id = nanoid(16);
+  try {
+    const {
+      title,
+      tags,
+      body
+    } = request.payload;
 
-  const createdAt = new Date().toISOString();
-  const updateAt = createdAt;
+    const id = nanoid(16);
+    const createdAt = new Date().toISOString();
+    const updatedAt = createdAt;
 
-  const newNote = {
-    title, body, tags, id, createdAt, updateAt,
-  };
-  notes.push(newNote);
+    const newNote = {
+      title,
+      tags,
+      body,
+      id,
+      createdAt,
+      updatedAt,
+    };
 
-  const isSuccess = notes.filter((note) => note.id === id).length > 0;
+    notes.push(newNote);
 
-  if (isSuccess) {
+    const isSuccess = notes.filter((note) => note.id === id).length > 0;
+
+    if (isSuccess) {
+      const response = h.response({
+        status: 'success',
+        message: 'Catatan berhasil ditambahkan',
+        data: {
+          noteId: id,
+        },
+      });
+      response.code(201);
+      return response;
+    }
     const response = h.response({
-      status: 'Success',
-      message: 'Catatan berhasil ditambahkan',
-      data: {
-        noteId: id,
-      },
-
+      status: 'fail',
+      message: 'Catatan gagal ditambahkan',
     });
-
-    response.code(201);
+    response.code(500);
     return response;
-
+  } catch (err) {
+    throw new err;
   }
-
-  const response = h.response({
-    status: 'fail',
-    message: 'Catatan gagal ditambahkan',
-  });
-  response.code(500);
-  return response;
-  
 };
 
-module.exports = addNoteHandler;
+module.exports = {
+  addNoteHandler
+};
