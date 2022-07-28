@@ -1,4 +1,4 @@
-# Notes App API with hapijs - Dicoding Submission
+# Notes App API with Hapi js - Dicoding Submission
 Exercise Building Web Services for Notes App.
 
 Built with Javascript, NodeJs, Web Component, Node Package Manager, HapiJS.
